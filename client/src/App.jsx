@@ -1,7 +1,10 @@
+import Barcode from "./component/BarCode";
 
 const App = () => {
     return (
-        <div>App</div>
+        <div>
+            <Barcode value={"Hello Sailash!"} />
+        </div>
     )
 }
 
