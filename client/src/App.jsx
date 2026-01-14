@@ -1,11 +1,31 @@
-import Barcode from "./component/BarCode";
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-const App = () => {
+import DashboardPage from './pages/dashboardPage/DashboardPage';
+import LoginPage from './pages/loginPage/LoginPage';
+import AdminPanel from './pages/adminPage/AdminPanel';
+
+import UnauthorizedPage from './pages/otherPages/UnauthorizedPage';
+
+import ProtectedRoute from './routes/ProtectedRoute';
+import Mainlayout from './layout/Mainlayout';
+
+function App() {
     return (
-        <div>
-            <Barcode value={"Hello Sailash!"} />
-        </div>
-    )
+        <Router>
+            <Routes>
+                <Route element={<ProtectedRoute />}>    
+                <Route element={<Mainlayout />}>
+                    <Route path="/home" element={<DashboardPage />} />
+                    <Route path="/admin-panel" element={<AdminPanel />}/>
+                </Route>
+                </Route>
+
+                <Route path="/" element={<Navigate to="/home" replace />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/unauthorized" element={<UnauthorizedPage />} />
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;
