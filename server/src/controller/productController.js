@@ -1,5 +1,21 @@
 import { response } from '../utils/response.js';
-import { getAllProductsService, addProductService, updateProductService, deleteProductService } from '../service/productService.js';
+import { getProductService, getAllProductsService, addProductService, updateProductService, deleteProductService } from '../service/productService.js';
+
+export const getProduct = async (req, res) => {
+    try {
+        const sno = req.query.sno;
+        const result = await getProductService(sno);
+        if(result.status === 200) {
+            return res.status(200).send(response('SUCCESS', result.message, result.data));
+        }
+        else {
+            return res.status(result.status).send(response('FAILED', result.message));
+        }
+    }
+    catch(err) {
+        return res.status(500).send(response('FAILED', err.message, null));
+    }
+}
 
 export const getAllProducts = async(req, res) => {
     try {

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { FiPlus, FiEdit, FiTrash2, FiSearch } from "react-icons/fi";
+import { IoMdBarcode } from "react-icons/io";
 
 import ProductFormModal from "../../component/productPageComponent/ProductFormModal";
 import DeleteProductModal from "../../component/productPageComponent/DeleteProductModal";
 import BarCode from "../../component/barcode/BarCode";
 import BarCodePopup from "../../component/barcode/BarCodePopup";
+import BarCodeScanner from "../../component/barcode/BarCodeScanner";
 
 import { locations } from "../../constants/metaData";
 
@@ -27,6 +29,11 @@ const ProductManagementPage = () => {
     sp: "none",
     location: "",
   });
+
+  const [deleteProductModal, setDeleteProductModal] = useState(false);
+  const [deleteSelectedId, setDeleteSelectedId] = useState('');
+
+  const [showScanner, setShowScanner] = useState(false);
 
   // Fetch from backend whenever filter/search changes
   const fetchProducts = async () => {
@@ -82,7 +89,6 @@ const ProductManagementPage = () => {
       fetchProducts();
     }
     catch(err) {
-      console.log(err.message)
     }
   }
 
@@ -102,26 +108,6 @@ const ProductManagementPage = () => {
       fetchProducts();
     }
     catch(err) {
-      console.log(err.message)
-    }
-  }
-
-  const deleteProductDb = async (_id) => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ _id: _id })
-      });
-
-      const data = await response.json();
-      fetchProducts();
-    }
-    catch(err) {
-      console.log(err.message)
     }
   }
 
@@ -129,8 +115,26 @@ const ProductManagementPage = () => {
     fetchProducts();
   }, [searchTerm, filters]);
 
+  const handleScan = async (code) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product?sno=${code}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        }
+      });
+
+      const data = await response.json();
+      setProducts([data.data]);
+    }
+    catch(err) {
+
+    }
+  };
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 pt-3 space-y-5">
       {/* Header */}
       <div className="flex flex-wrap justify-between items-center gap-3">
         <h2 className="text-3xl font-bold text-slate-900">Product Management</h2>
@@ -143,22 +147,25 @@ const ProductManagementPage = () => {
         </button>
       </div>
 
-      {/* Search */}
-      <div className="flex items-center gap-2 bg-white border border-slate-400 px-3 py-2 rounded-lg w-full max-w-md shadow-sm">
-        <FiSearch className="text-slate-600" />
-        <input
-          type="text"
-          placeholder="Search products..."
-          className="w-full bg-transparent outline-none text-slate-900"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      <div className="flex items-center gap-5">
+        {/* Search */}
+        <div className="flex items-center gap-2 bg-white border border-slate-400 px-3 py-2 rounded-lg w-full max-w-md shadow-sm">
+          <FiSearch className="text-slate-600" />
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="w-full bg-transparent outline-none text-slate-900"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <IoMdBarcode onClick={() => setShowScanner(true)} size={30} className="cursor-pointer hover:scale-110 transition" />
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-4 items-center">
         <select
-          className="border px-3 py-2 rounded-lg bg-white border-slate-400 text-slate-900"
+          className="border px-3 py-2 rounded-lg bg-white border-slate-400 text-slate-900 cursor-pointer"
           value={filters.qty}
           onChange={(e) => setFilters({ ...filters, qty: e.target.value })}
         >
@@ -168,7 +175,7 @@ const ProductManagementPage = () => {
         </select>
 
         <select
-          className="border px-3 py-2 rounded-lg bg-white border-slate-400 text-slate-900"
+          className="border px-3 py-2 rounded-lg bg-white border-slate-400 text-slate-900 cursor-pointer"
           value={filters.cp}
           onChange={(e) => setFilters({ ...filters, cp: e.target.value })}
         >
@@ -178,7 +185,7 @@ const ProductManagementPage = () => {
         </select>
 
         <select
-          className="border px-3 py-2 rounded-lg bg-white border-slate-400 text-slate-900"
+          className="border px-3 py-2 rounded-lg bg-white border-slate-400 text-slate-900 cursor-pointer"
           value={filters.sp}
           onChange={(e) => setFilters({ ...filters, sp: e.target.value })}
         >
@@ -188,7 +195,7 @@ const ProductManagementPage = () => {
         </select>
 
         <select
-          className="border px-3 py-2 rounded-lg bg-white border-slate-400 text-slate-900"
+          className="border px-3 py-2 rounded-lg bg-white border-slate-400 text-slate-900 cursor-pointer"
           value={filters.location}
           onChange={(e) => setFilters({ ...filters, location: e.target.value })}
         >
@@ -215,9 +222,9 @@ const ProductManagementPage = () => {
       {error && <p className="text-red-600 font-semibold">{error}</p>}
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl shadow-lg border border-slate-300">
+      <div className="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-xl shadow-lg border border-slate-300">
         <table className="min-w-full text-left text-sm">
-          <thead className="bg-slate-100 text-slate-800 font-semibold">
+          <thead className="bg-slate-100 text-slate-800 font-semibold sticky top-0 z-20">
             <tr>
               <th className="px-4 py-3">S.No</th>
               <th className="px-4 py-3">Product Name</th>
@@ -260,12 +267,13 @@ const ProductManagementPage = () => {
                 </td>
 
                 {/* Barcode Button */}
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 cursor-pointer">
                   <button
                     onClick={() => {
                       setSelectedBarcode(p.sno);
                       setSelectedProductName(p.productName);
                     }}
+                    className="cursor-pointer"
                   >
                     <BarCode value={p.sno} width={1} height={20} />
                   </button>
@@ -278,11 +286,14 @@ const ProductManagementPage = () => {
                         setEditProduct(p);
                         setShowModal(true);
                       }}
-                      className="text-green-600 hover:scale-110 transition"
+                      className="text-green-600 hover:scale-110 transition cursor-pointer"
                     >
                       <FiEdit size={18} />
                     </button>
-                    <button onClick={() => deleteProductDb(p._id)} className="text-red-600 hover:scale-110 transition">
+                    <button onClick={() => {
+                        setDeleteSelectedId(p._id);
+                        setDeleteProductModal(true);
+                      }} className="text-red-600 hover:scale-110 transition cursor-pointer">
                       <FiTrash2 size={18} />
                     </button>
                   </div>
@@ -315,6 +326,18 @@ const ProductManagementPage = () => {
           updateProductDb={updateProductDb}
         />
       )}
+
+      {
+        deleteProductModal && <DeleteProductModal id={deleteSelectedId} onCancel={() => setDeleteProductModal(false)} fetchProducts={fetchProducts} />
+      }
+
+      {showScanner && (
+  <BarCodeScanner
+    onDetected={handleScan}
+    onClose={() => setShowScanner(false)}
+  />
+)}
+
     </div>
   );
 };
