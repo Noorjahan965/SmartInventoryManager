@@ -19,9 +19,9 @@ const Sidebar = ({ setLogoutPopup }) => {
         <NavLink to="/home" className={menuItem}>🏠 Home</NavLink>
         <NavLink to="/view" className={menuItem}>📋 View</NavLink>
         <NavLink to="/stock-management" className={menuItem}>📦 Stocks</NavLink>
-        <NavLink to="/product-management" className={menuItem}>🧰 Product Management</NavLink>
         <NavLink to="/stock-entry" className={menuItem}>➕ Stock Entry</NavLink>
         <NavLink to="/stock-added" className={menuItem}>📑 Stock Added</NavLink>
+        <NavLink to="/product-management" className={menuItem}>🧰 Product Management</NavLink>
 
         {isAdmin && (
           <NavLink to="/admin-panel" className={menuItem}>🛡️ Admin Panel</NavLink>

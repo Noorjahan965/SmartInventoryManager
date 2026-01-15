@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 
 import DashboardPage from './pages/dashboardPage/DashboardPage';
 import LoginPage from './pages/loginPage/LoginPage';
+
+import ProductManagementPage from './pages/productPage/ProductManagementPage';
 import AdminPanel from './pages/adminPage/AdminPanel';
 
 import UnauthorizedPage from './pages/otherPages/UnauthorizedPage';
@@ -14,10 +16,12 @@ function App() {
         <Router>
             <Routes>
                 <Route element={<ProtectedRoute />}>    
-                <Route element={<Mainlayout />}>
-                    <Route path="/home" element={<DashboardPage />} />
-                    <Route path="/admin-panel" element={<AdminPanel />}/>
-                </Route>
+                    <Route element={<Mainlayout />}>
+                        <Route path="/home" element={<DashboardPage />} />
+
+                        <Route path="/product-management" element={<ProductManagementPage />}/>
+                        <Route path="/admin-panel" element={<AdminPanel />}/>
+                    </Route>
                 </Route>
 
                 <Route path="/" element={<Navigate to="/home" replace />} />
