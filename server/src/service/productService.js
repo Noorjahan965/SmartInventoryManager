@@ -9,6 +9,21 @@ const generateUniqueSno = async () => {
   }
 };
 
+export const getProductService = async (sno) => {
+    try {
+        const product = await Product.findOne({ sno });
+
+        if (!product) {
+            return { status: 404, message: "Product not found" };
+        }
+
+        return { status: 200, message: "Product fetched successfully", data: product };
+    }
+    catch(err) {
+        return { status: 500, message: err.message };
+    }
+}
+
 export const getAllProductsService = async ({
       search = "",
       location = "",
