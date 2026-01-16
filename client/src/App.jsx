@@ -10,6 +10,7 @@ import UnauthorizedPage from './pages/otherPages/UnauthorizedPage';
 
 import ProtectedRoute from './routes/ProtectedRoute';
 import Mainlayout from './layout/Mainlayout';
+import ViewProductsPage from './pages/viewpage/ViewProductsPage';
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                 <Route element={<ProtectedRoute />}>    
                     <Route element={<Mainlayout />}>
                         <Route path="/home" element={<DashboardPage />} />
+                        <Route path="/view" element={<ViewProductsPage />} />
 
                         <Route path="/product-management" element={<ProductManagementPage />}/>
                         <Route path="/admin-panel" element={<AdminPanel />}/>
