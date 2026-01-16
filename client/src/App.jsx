@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import DashboardPage from './pages/dashboardPage/DashboardPage';
 import LoginPage from './pages/loginPage/LoginPage';
 
+import BillingPage from './pages/billingPage/BillingPage';
 import ProductManagementPage from './pages/productPage/ProductManagementPage';
 import AdminPanel from './pages/adminPage/AdminPanel';
 
@@ -21,6 +22,7 @@ function App() {
                         <Route path="/home" element={<DashboardPage />} />
                         <Route path="/view" element={<ViewProductsPage />} />
 
+                        <Route path="/billing" element={<BillingPage />}/>
                         <Route path="/product-management" element={<ProductManagementPage />}/>
                         <Route path="/admin-panel" element={<AdminPanel />}/>
                     </Route>
