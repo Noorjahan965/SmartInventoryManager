@@ -7,10 +7,17 @@ import BarCodeScanner from "../../component/barcode/BarCodeScanner";
 import QuantityModel from "../../component/billingPageComponent/QuantityModel";
 
 import ResetModal from "../../component/billingPageComponent/ResetModal";
+import SubmitModal from "../../component/billingPageComponent/SubmitModal";
 
 const BillingPage = () => {
 
     const token = localStorage.getItem("Token");
+
+    const [customerName, setCustomerName] = useState('');
+    const [mobileNo, setMobileNo] = useState('');
+    const [email, setEmail] = useState('');
+    const [paymentType, setPaymentType] = useState('');
+
     const [searchTerm, setSearchTerm] = useState('');
     const [products, setProducts] = useState([]);
 
@@ -24,7 +31,7 @@ const BillingPage = () => {
     const [cartProduct, setCartProduct] = useState(JSON.parse(localStorage.getItem('Bill')) || []);
 
     const [showResetModal, setShowResetModal] = useState(false);
-    const [showSubmitModal, setShowSubmitModal] = useState(true);
+    const [showSubmitModal, setShowSubmitModal] = useState(false);
 
     const fetchProducts = async () => {
         try {
@@ -106,6 +113,52 @@ const BillingPage = () => {
         setSelectedProduct({...obj, qty: 1});
     }
 
+    const resetBillData = () => {
+        setCustomerName('');
+        setMobileNo('');
+        setEmail('');
+        setPaymentType('');
+    }
+
+    const submitBill = async () => {
+        if(customerName.trim() === '' || mobileNo === '' || paymentType === '') {
+            alert("Fill all field");
+            return;
+        }
+        const billingProduct = JSON.parse(localStorage.getItem('Bill')) || [];
+        if(billingProduct.length === 0) {
+            alert('No products');
+            return;
+        }
+        let bill = {
+            authorName: localStorage.getItem('UserName'),
+            customerName: customerName,
+            mobileNo: mobileNo,
+            email: email,
+            modeOfPayment: paymentType,
+            product: billingProduct
+        }
+        const token = localStorage.getItem('Token');
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/stock/bill`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(bill)
+            })
+            const data = await response.json();
+            localStorage.removeItem('Bill')
+            setCartProduct([]);
+            resetBillData();
+            alert('Bill added');
+        }
+        catch(err) {
+
+        }
+    }
+
     return(
         <div className="p-3 pt-2">
 
@@ -118,28 +171,28 @@ const BillingPage = () => {
                 {/* Customer Name */}
                 <div className="flex flex-col">
                     <label className="font-semibold">Customer Name</label>
-                    <input type="text" placeholder="Enter name" className="border p-2 rounded w-64" />
+                    <input value={customerName} onChange={(e) => setCustomerName(e.target.value)} type="text" placeholder="Enter name" className="border p-2 rounded w-64" />
                 </div>
 
                 {/* Mobile No */}
                 <div className="flex flex-col">
                     <label className="font-semibold">Mobile No</label>
-                    <input type="tel" placeholder="9876543210" className="border p-2 rounded w-48" />
+                    <input type="number" value={mobileNo} onChange={(e) => setMobileNo(e.target.value)} placeholder="9876543210" className="border p-2 rounded w-48" />
                 </div>
 
                 {/* Email */}
                 <div className="flex flex-col">
                     <label className="font-semibold">Email</label>
-                    <input type="email" placeholder="customer@example.com" className="border p-2 rounded w-64" />
+                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="customer@example.com" className="border p-2 rounded w-64" />
                 </div>
 
                 {/* Payment Type */}
                 <div className="flex flex-col">
                     <label className="font-semibold">Payment Type</label>
-                    <select className="border p-2 rounded w-48">
+                    <select value={paymentType} onChange={(e) => setPaymentType(e.target.value)} className="border p-2 rounded w-48">
                         <option disabled value="">Select</option>
-                        <option value="cash">Cash</option>
-                        <option value="upi">UPI</option>
+                        <option value="CASH">Cash</option>
+                        <option value="UPI">UPI</option>
                     </select>
                 </div>
                 <div>
@@ -285,7 +338,7 @@ const BillingPage = () => {
                         <button onClick={() => setShowResetModal(true)} className="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 font-bold">
                             Reset Cart
                         </button>
-                        <button className="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 font-bold">
+                        <button onClick={() => setShowSubmitModal(true)} className="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 font-bold">
                             Submit Bill
                         </button>
                     </div>
@@ -315,6 +368,11 @@ const BillingPage = () => {
                         setCartProduct([]);
                         setShowResetModal(false);
                     }} onCancel={() => setShowResetModal(false)} />
+                )
+            }
+            {
+                showSubmitModal && (
+                    <SubmitModal onConfirm={() => submitBill()} onCancel={() => setShowSubmitModal(false)} />
                 )
             }
         </div>

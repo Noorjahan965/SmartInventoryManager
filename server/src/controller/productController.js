@@ -9,7 +9,7 @@ export const getProduct = async (req, res) => {
             return res.status(200).send(response('SUCCESS', result.message, result.data));
         }
         else {
-            return res.status(result.status).send(response('FAILED', result.message));
+            return res.status(result.status).send(response('FAILED', result.message, null));
         }
     }
     catch(err) {
@@ -24,7 +24,7 @@ export const getAllProducts = async(req, res) => {
             return res.status(200).send(response('SUCCESS', result.message, result.data));
         }
         else {
-            return res.status(result.status).send(response('FAILED', result.message));
+            return res.status(result.status).send(response('FAILED', result.message, null));
         }
     }
     catch(err) {

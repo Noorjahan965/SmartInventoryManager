@@ -25,6 +25,7 @@ const QuantityModel = ({ product, updateCart, onCancel }) => {
                 productName: product.productName,
                 currentQuantity: product.currentQuantity,
                 qty: Number(qty),
+                cp: product.cp,
                 sp: product.sp,
                 total: Number(qty) * Number(product.sp)
             }
