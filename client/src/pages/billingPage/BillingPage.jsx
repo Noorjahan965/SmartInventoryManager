@@ -75,6 +75,7 @@ const BillingPage = () => {
 
             const data = await response.json();
             setProducts([data.data]);
+            setSelectedProduct(data.data);
         }
         catch(err) {
 

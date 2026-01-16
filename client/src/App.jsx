@@ -11,7 +11,6 @@ import UnauthorizedPage from './pages/otherPages/UnauthorizedPage';
 
 import ProtectedRoute from './routes/ProtectedRoute';
 import Mainlayout from './layout/Mainlayout';
-import DragDropDemo from './DragDropDemo';
 
 function App() {
     return (
@@ -24,9 +23,6 @@ function App() {
                         <Route path="/billing" element={<BillingPage />}/>
                         <Route path="/product-management" element={<ProductManagementPage />}/>
                         <Route path="/admin-panel" element={<AdminPanel />}/>
-
-
-                        <Route path="/drag" element={<DragDropDemo />} />
                     </Route>
                 </Route>
 
