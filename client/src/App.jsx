@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import DashboardPage from './pages/dashboardPage/DashboardPage';
 import LoginPage from './pages/loginPage/LoginPage';
 
+import BillingPage from './pages/billingPage/BillingPage';
 import ProductManagementPage from './pages/productPage/ProductManagementPage';
 import AdminPanel from './pages/adminPage/AdminPanel';
 
@@ -10,6 +11,7 @@ import UnauthorizedPage from './pages/otherPages/UnauthorizedPage';
 
 import ProtectedRoute from './routes/ProtectedRoute';
 import Mainlayout from './layout/Mainlayout';
+import DragDropDemo from './DragDropDemo';
 
 function App() {
     return (
@@ -19,8 +21,12 @@ function App() {
                     <Route element={<Mainlayout />}>
                         <Route path="/home" element={<DashboardPage />} />
 
+                        <Route path="/billing" element={<BillingPage />}/>
                         <Route path="/product-management" element={<ProductManagementPage />}/>
                         <Route path="/admin-panel" element={<AdminPanel />}/>
+
+
+                        <Route path="/drag" element={<DragDropDemo />} />
                     </Route>
                 </Route>
 

@@ -153,7 +153,7 @@ const ProductManagementPage = () => {
           <FiSearch className="text-slate-600" />
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Product Name / Sno"
             className="w-full bg-transparent outline-none text-slate-900"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
