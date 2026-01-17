@@ -134,13 +134,13 @@ const ProductManagementPage = () => {
 	};
 
 	return (
-		<div className="p-6 pt-3 space-y-5">
+		<div className="max-md:p-0 p-6 pt-3 space-y-5">
 			{/* Header */}
 			<div className="flex flex-wrap justify-between items-center gap-3">
-				<h2 className="text-3xl font-bold text-slate-900">Product Management</h2>
+				<h2 className="text-xl md:text-3xl font-bold text-slate-900">Product Management</h2>
 				<button
 					onClick={() => setShowModal(true)}
-					className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 cursor-pointer text-white font-semibold px-4 py-2 rounded-lg transition"
+					className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 cursor-pointer text-white font-semibold px-2 py-1 max-md:text-sm md:px-4 md:py-2 rounded-lg transition"
 				>
 					<FiPlus size={18} />
 					Add Product
@@ -222,87 +222,88 @@ const ProductManagementPage = () => {
 			{error && <p className="text-red-600 font-semibold">{error}</p>}
 
 			{/* Table */}
-			<div className="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-xl shadow-lg border border-slate-300">
-				<table className="min-w-full text-left text-sm">
-					<thead className="bg-slate-100 text-slate-800 font-semibold sticky top-0 z-20">
-						<tr>
-							<th className="px-4 py-3">S.No</th>
-							<th className="px-4 py-3">Product Name</th>
-							<th className="px-4 py-3">Description</th>
-							<th className="px-4 py-3">Qty</th>
-							<th className="px-4 py-3">CP</th>
-							<th className="px-4 py-3">SP</th>
-							<th className="px-4 py-3">Min Qty</th>
-							<th className="px-4 py-3">Location</th>
-							<th className="px-4 py-3">Variant</th>
-							<th className="px-4 py-3">Barcode</th>
-							<th className="px-4 py-3 text-center">Actions</th>
-						</tr>
-					</thead>
+<div className="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-xl shadow-lg border border-slate-300">
+	<table className="min-w-full text-left text-xs sm:text-sm">
+		<thead className="bg-slate-100 text-slate-800 font-semibold sticky top-0 z-20">
+			<tr>
+				<th className="px-2 py-2 sm:px-4 sm:py-3">S.No</th>
+				<th className="px-2 py-2 sm:px-4 sm:py-3">Product Name</th>
+				<th className="px-2 py-2 sm:px-4 sm:py-3">Description</th>
+				<th className="px-2 py-2 sm:px-4 sm:py-3">Qty</th>
+				<th className="px-2 py-2 sm:px-4 sm:py-3">CP</th>
+				<th className="px-2 py-2 sm:px-4 sm:py-3">SP</th>
+				<th className="px-2 py-2 sm:px-4 sm:py-3">Min Qty</th>
+				<th className="px-2 py-2 sm:px-4 sm:py-3">Location</th>
+				<th className="px-2 py-2 sm:px-4 sm:py-3">Variant</th>
+				<th className="px-2 py-2 sm:px-4 sm:py-3">Barcode</th>
+				<th className="px-2 py-2 sm:px-4 sm:py-3 text-center">Actions</th>
+			</tr>
+		</thead>
 
-					<tbody className="text-slate-800">
-						{!loading && products.length === 0 && (
-							<tr>
-								<td colSpan="11" className="text-center py-6 text-slate-600">
-									No products found 😕
-								</td>
-							</tr>
-						)}
+		<tbody className="text-slate-800">
+			{!loading && products.length === 0 && (
+				<tr>
+					<td colSpan="11" className="text-center py-6 text-slate-600">
+						No products found 😕
+					</td>
+				</tr>
+			)}
 
-						{products.map((p) => (
-							<tr
-								key={p.sno}
-								className="border-b hover:bg-slate-50 transition"
+			{products.map((p) => (
+				<tr key={p.sno} className="border-b hover:bg-slate-50 transition">
+					<td className="px-2 py-2 sm:px-4 sm:py-3">{p.sno}</td>
+					<td className="px-2 py-2 sm:px-4 sm:py-3">{p.productName}</td>
+					<td className="px-2 py-2 sm:px-4 sm:py-3">{p.description}</td>
+					<td className="px-2 py-2 sm:px-4 sm:py-3">{p.currentQuantity}</td>
+					<td className="px-2 py-2 sm:px-4 sm:py-3">{p.cp}</td>
+					<td className="px-2 py-2 sm:px-4 sm:py-3">{p.sp}</td>
+					<td className="px-2 py-2 sm:px-4 sm:py-3">{p.minQuantity}</td>
+					<td className="px-2 py-2 sm:px-4 sm:py-3">{p.location}</td>
+					<td className="px-2 py-2 sm:px-4 sm:py-3">
+						{p.variant?.length ? p.variant.join(", ") : "-"}
+					</td>
+
+					{/* Barcode */}
+					<td className="px-2 py-2 sm:px-4 sm:py-3 cursor-pointer">
+						<button
+							onClick={() => {
+								setSelectedBarcode(p.sno);
+								setSelectedProductName(p.productName);
+							}}
+						>
+							<BarCode value={p.sno} width={1} height={16} className="sm:h-5!" />
+						</button>
+					</td>
+
+					<td className="px-2 py-2 sm:px-4 sm:py-3">
+						<div className="flex justify-center gap-2 sm:gap-4">
+							<button
+								onClick={() => {
+									setEditProduct(p);
+									setShowModal(true);
+								}}
+								className="text-green-600 hover:scale-110 transition cursor-pointer"
 							>
-								<td className="px-4 py-3">{p.sno}</td>
-								<td className="px-4 py-3">{p.productName}</td>
-								<td className="px-4 py-3">{p.description}</td>
-								<td className="px-4 py-3">{p.currentQuantity}</td>
-								<td className="px-4 py-3">{p.cp}</td>
-								<td className="px-4 py-3">{p.sp}</td>
-								<td className="px-4 py-3">{p.minQuantity}</td>
-								<td className="px-4 py-3">{p.location}</td>
-								<td className="px-4 py-3">
-									{p.variant?.length ? p.variant.join(", ") : "-"}
-								</td>
+								<FiEdit size={18} className="sm:h-5! sm:w-5!" />
+							</button>
 
-								{/* Barcode Button */}
-								<td className="px-4 py-3 cursor-pointer">
-									<button
-										onClick={() => {
-											setSelectedBarcode(p.sno);
-											setSelectedProductName(p.productName);
-										}}
-										className="cursor-pointer"
-									>
-										<BarCode value={p.sno} width={1} height={20} />
-									</button>
-								</td>
+							<button
+								onClick={() => {
+									setDeleteSelectedId(p._id);
+									setDeleteProductModal(true);
+								}}
+								className="text-red-600 hover:scale-110 transition cursor-pointer"
+							>
+								<FiTrash2 size={18} className="sm:h-4.5! sm:w-4.5!" />
+							</button>
+						</div>
+					</td>
+				</tr>
+			))}
+		</tbody>
+	</table>
+</div>
 
-								<td className="px-4 py-3">
-									<div className="flex justify-center gap-4">
-										<button
-											onClick={() => {
-												setEditProduct(p);
-												setShowModal(true);
-											}}
-											className="text-green-600 hover:scale-110 transition cursor-pointer"
-										>
-											<FiEdit size={18} />
-										</button>
-										<button onClick={() => {
-											setDeleteSelectedId(p._id);
-											setDeleteProductModal(true);
-										}} className="text-red-600 hover:scale-110 transition cursor-pointer">
-											<FiTrash2 size={18} />
-										</button>
-									</div>
-								</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
-			</div>
 
 			{/* Barcode Modal */}
 			{selectedBarcode && (

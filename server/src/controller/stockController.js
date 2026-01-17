@@ -1,5 +1,5 @@
 import { response } from '../utils/response.js';
-import { createBillService, addStockService, getLogsService, getRecordsService, getDashboardStatsService } from '../service/stockService.js';
+import { createBillService, addStockService, getLogsService, getRecordsService, getDashboardStatsService, updatePaidStatusService } from '../service/stockService.js';
 
 export const createBill = async (req, res) => {
     try {
@@ -75,3 +75,18 @@ export const getDashboardStats = async (req, res) => {
     return res.status(500).send(response('FAILED', err.message, null));
   }
 };
+
+export const updatePaidStatus = async (req, res) => {
+    try {
+        const result = await updatePaidStatusService(req.body);
+        if (result.status === 200) {
+            return res.status(200).send(response('SUCCESS', result.message, result.data));
+        }
+        else {
+            return res.status(result.status).send(response('FAILED', result.message, null));
+        }
+    }
+    catch (err) {
+        return res.status(500).send(response('FAILED', err.message, null));
+    }
+}
