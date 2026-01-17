@@ -141,7 +141,7 @@ export const getLogsService = async ({ isBill, date }) => {
       query.dateAndTime = { $regex: `^${date}` };
     }
 
-    const logs = await Log.find(query).sort({ dateAndTime: -1 });
+    const logs = await Log.find(query).sort({ dateAndTime: -1 }).limit(50);
 
     return {
       status: 200,
