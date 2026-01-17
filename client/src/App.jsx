@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import DashboardPage from './pages/dashboardPage/DashboardPage';
 import LoginPage from './pages/loginPage/LoginPage';
 
+import HistoryPage from './pages/HistoryPage/HistoryPage';
+import AddStockPage from './pages/addStockPage/AddStockPage';
+import BillingPage from './pages/billingPage/BillingPage';
 import ProductManagementPage from './pages/productPage/ProductManagementPage';
 import AdminPanel from './pages/adminPage/AdminPanel';
 
@@ -10,6 +13,7 @@ import UnauthorizedPage from './pages/otherPages/UnauthorizedPage';
 
 import ProtectedRoute from './routes/ProtectedRoute';
 import Mainlayout from './layout/Mainlayout';
+import ViewProductsPage from './pages/viewpage/ViewProductsPage';
 
 function App() {
     return (
@@ -18,7 +22,10 @@ function App() {
                 <Route element={<ProtectedRoute />}>    
                     <Route element={<Mainlayout />}>
                         <Route path="/home" element={<DashboardPage />} />
-
+                        <Route path="/view" element={<ViewProductsPage />} />
+                        <Route path='/history' element={<HistoryPage />} />
+                        <Route path='/add-stock' element={<AddStockPage />} />
+                        <Route path="/billing" element={<BillingPage />}/>
                         <Route path="/product-management" element={<ProductManagementPage />}/>
                         <Route path="/admin-panel" element={<AdminPanel />}/>
                     </Route>

@@ -1,5 +1,5 @@
 import { response } from '../utils/response.js';
-import { getProductService, getAllProductsService, addProductService, updateProductService, deleteProductService } from '../service/productService.js';
+import { getProductService, getAllProductsService, addProductService, updateProductService, deleteProductService, getLowStockProductsService } from '../service/productService.js';
 
 export const getProduct = async (req, res) => {
     try {
@@ -9,7 +9,7 @@ export const getProduct = async (req, res) => {
             return res.status(200).send(response('SUCCESS', result.message, result.data));
         }
         else {
-            return res.status(result.status).send(response('FAILED', result.message));
+            return res.status(result.status).send(response('FAILED', result.message, null));
         }
     }
     catch(err) {
@@ -24,7 +24,7 @@ export const getAllProducts = async(req, res) => {
             return res.status(200).send(response('SUCCESS', result.message, result.data));
         }
         else {
-            return res.status(result.status).send(response('FAILED', result.message));
+            return res.status(result.status).send(response('FAILED', result.message, null));
         }
     }
     catch(err) {
@@ -88,3 +88,16 @@ export const deleteProduct = async (req, res) => {
         return res.status(500).send(response('FAILED', err.message, null));
     }
 }
+
+export const getLowStockProducts = async (req, res) => {
+  try {
+    const result = await getLowStockProductsService();
+    if (result.status === 200) {
+      return res.status(200).send(response('SUCCESS', result.message, result.data));
+    } else {
+      return res.status(result.status).send(response('FAILED', result.message, null));
+    }
+  } catch (err) {
+    return res.status(500).send(response('FAILED', err.message, null));
+  }
+};

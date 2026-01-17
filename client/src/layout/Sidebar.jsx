@@ -18,9 +18,9 @@ const Sidebar = ({ setLogoutPopup }) => {
       <ul className="flex-1 overflow-y-auto space-y-2 text-sm">
         <NavLink to="/home" className={menuItem}>🏠 Home</NavLink>
         <NavLink to="/view" className={menuItem}>📋 View</NavLink>
-        <NavLink to="/stock-management" className={menuItem}>📦 Stocks</NavLink>
-        <NavLink to="/stock-entry" className={menuItem}>➕ Stock Entry</NavLink>
-        <NavLink to="/stock-added" className={menuItem}>📑 Stock Added</NavLink>
+        <NavLink to="/billing" className={menuItem}>📑 Billing</NavLink>
+        <NavLink to="/add-stock" className={menuItem}>➕ Add Stock</NavLink>
+        <NavLink to="/history" className={menuItem}>📦 History</NavLink>
         <NavLink to="/product-management" className={menuItem}>🧰 Product Management</NavLink>
 
         {isAdmin && (
