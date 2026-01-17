@@ -7,8 +7,7 @@ const logSchema = mongoose.Schema({
     email: { type: String },
     isPaid: { type: Boolean },
     modeOfPayment: { type: String, 
-        enum: ['CASH', 'UPI'], 
-        required: true 
+        enum: ['CASH', 'UPI']
     },
     isBill: { type: Boolean, required: true },
     totalCp: { type: Number, required: true },
