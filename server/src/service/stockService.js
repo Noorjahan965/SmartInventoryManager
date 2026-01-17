@@ -27,7 +27,6 @@ export const createBillService = async ({
     hour12: false
   });
 
-  // must be let, not const
   let totalCp = 0;
   let totalSp = 0;
 
@@ -77,5 +76,102 @@ export const createBillService = async ({
     };
   } catch (err) {
     return { status: 500, message: err.message };
+  }
+};
+
+
+export const addStockService = async ({ authorName, product }) => {
+    const ist = new Date().toLocaleString("sv-SE", {
+        timeZone: "Asia/Kolkata",
+        hour12: false
+    });
+
+    let totalCp = 0;
+    product.forEach((p) => {
+        totalCp += Number(p.cp) * Number(p.qty);
+    });
+    
+    try {
+        const newLog = new Log({
+            author: authorName,
+            isBill: false,
+            totalCp,
+            dateAndTime: ist,
+        });
+
+        const savedLog = await newLog.save();
+
+        for (const p of product) {
+            const objectId = new mongoose.Types.ObjectId(p._id);
+
+            const newRecord = new Record({
+                logId: savedLog._id,
+                productId: objectId,
+                sno: p.sno,
+                productName: p.productName,
+                quantity: p.qty,
+                cp: p.cp,
+            });
+
+            await modifyQuantity(objectId, "ADD", p.qty);
+            await newRecord.save();
+        }
+
+        return {
+            status: 201,
+            message: "Stock Added successfully",
+            data: savedLog,
+        };
+    }
+    catch(err) {
+        return { status: 500, message: err.message };
+    }
+}
+
+
+export const getLogsService = async ({ isBill, date }) => {
+  try {
+    if (typeof isBill === "undefined") {
+      return { status: 400, message: "isBill is required" };
+    }
+
+    const query = { isBill };
+
+    if (date) {
+      query.dateAndTime = { $regex: `^${date}` };
+    }
+
+    const logs = await Log.find(query).sort({ dateAndTime: -1 });
+
+    return {
+      status: 200,
+      message: "Logs fetched successfully",
+      data: logs
+    };
+
+  } catch (err) {
+    return { status: 500, message: err.message };
+  }
+};
+
+
+
+export const getRecordsService = async ({ logId }) => {
+  try {
+    if (!logId) {
+      return { status: 400, message: "logId is required" };
+    }
+
+    const records = await Record.find({ logId })
+      .sort({ createdAt: -1 });
+
+    return {
+      status: 200,
+      message: "Records fetched successfully",
+      data: records
+    };
+
+  } catch (error) {
+    return { status: 500, message: error.message };
   }
 };
