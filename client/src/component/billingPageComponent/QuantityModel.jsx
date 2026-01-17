@@ -86,10 +86,10 @@ const QuantityModel = ({ product, updateCart, onCancel }) => {
 
             {/* Actions */}
             <div className="flex justify-end gap-3 pt-2">
-                <button onClick={onCancel} className="px-3 py-2 rounded bg-gray-300 hover:bg-gray-400 text-sm" >
+                <button onClick={onCancel} className="px-3 py-2 rounded cursor-pointer transition bg-gray-300 hover:bg-gray-400 text-sm" >
                     Cancel
                 </button>
-                <button onClick={() => handleAdd()} disabled={lowStock} className={`px-3 py-2 rounded text-sm text-white ${lowStock ? "bg-red-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`} >
+                <button onClick={() => handleAdd()} disabled={lowStock} className={`px-3 py-2 rounded text-sm text-white ${lowStock ? "bg-red-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-800 transition cursor-pointer"}`} >
                     {mode === 'ADD' ? 'Add' : 'Edit'}
                 </button>
             </div>

@@ -85,7 +85,7 @@ const ViewProductsPage = () => {
     };
 
     return (
-        <div className="relative z-0 p-6 pt-3 space-y-5">
+        <div className="relative z-0 md:p-6 md:pt-3 space-y-5">
             {/* Header */}
             <div className="flex flex-wrap justify-between items-center gap-3">
                 <h2 className="text-3xl font-bold text-slate-900">View Inventory</h2>
@@ -143,65 +143,91 @@ const ViewProductsPage = () => {
             {error && <p className="text-red-600 font-semibold">{error}</p>}
 
             {/* Table */}
-            <div className="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-xl shadow-lg border border-slate-300">
-                <table className="min-w-full text-left text-sm">
-                    <thead className="bg-slate-100 text-slate-800 font-semibold sticky top-0 z-10">
-                        <tr>
-                            <th className="px-4 py-3">S.No</th>
-                            <th className="px-4 py-3">Product Name</th>
-                            <th className="px-4 py-3">Description</th>
-                            <th className="px-4 py-3">Qty</th>
-                            <th className="px-4 py-3">Price (SP)</th>
-                            <th className="px-4 py-3">Location</th>
-                            <th className="px-4 py-3">Variant</th>
-                            <th className="px-4 py-3">Barcode</th>
-                        </tr>
-                    </thead>
+<div className="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-xl shadow-lg border border-slate-300">
+  <table className="min-w-full text-left text-xs sm:text-sm">
+    <thead className="bg-slate-100 text-slate-800 font-semibold sticky top-0 z-10 text-[10px] sm:text-sm">
+      <tr>
+        <th className="px-2 py-1 sm:px-4 sm:py-3">S.No</th>
+        <th className="px-2 py-1 sm:px-4 sm:py-3">Product</th>
+        <th className="px-2 py-1 sm:px-4 sm:py-3">Desc</th>
+        <th className="px-2 py-1 sm:px-4 sm:py-3">Qty</th>
+        <th className="px-2 py-1 sm:px-4 sm:py-3">SP</th>
+        <th className="px-2 py-1 sm:px-4 sm:py-3">Loc</th>
+        <th className="px-2 py-1 sm:px-4 sm:py-3">Var</th>
+        <th className="px-2 py-1 sm:px-4 sm:py-3">Code</th>
+      </tr>
+    </thead>
 
-                    <tbody className="text-slate-800 bg-white">
-                        {!loading && products.length === 0 && (
-                            <tr>
-                                <td colSpan="8" className="text-center py-10 text-slate-500">
-                                    No products found in inventory.
-                                </td>
-                            </tr>
-                        )}
+    <tbody className="text-slate-800 bg-white">
+      {!loading && products.length === 0 && (
+        <tr>
+          <td
+            colSpan="8"
+            className="text-center py-6 sm:py-10 text-slate-500 text-xs sm:text-sm"
+          >
+            No products found in inventory.
+          </td>
+        </tr>
+      )}
 
-                        {products.map((p) => (
-                            <tr key={p.sno} className="border-b hover:bg-slate-50 transition">
-                                <td className="px-4 py-3 font-medium text-slate-500">{p.sno}</td>
-                                <td className="px-4 py-3 font-semibold">{p.productName}</td>
-                                <td className="px-4 py-3 text-slate-600">{p.description || "-"}</td>
-                                <td className="px-4 py-3">
-                                    <span className={`px-2 py-1 rounded text-xs font-bold ${p.currentQuantity <= p.minQuantity ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
-                                        {p.currentQuantity}
-                                    </span>
-                                </td>
-                                <td className="px-4 py-3 font-medium text-blue-700">${p.sp}</td>
-                                <td className="px-4 py-3">{p.location}</td>
-                                <td className="px-4 py-3">
-                                    <div className="flex gap-1 flex-wrap">
-                                        {p.variant?.length ? p.variant.map((v, i) => (
-                                            <span key={i} className="bg-slate-200 px-1.5 py-0.5 rounded text-[11px]">{v}</span>
-                                        )) : "-"}
-                                    </div>
-                                </td>
-                                <td className="px-4 py-3">
-                                    <button
-                                        onClick={() => {
-                                            setSelectedBarcode(p.sno);
-                                            setSelectedProductName(p.productName);
-                                        }}
-                                        className="cursor-pointer hover:opacity-70 transition"
-                                    >
-                                        <BarCode value={p.sno} width={1} height={20} />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+      {products.map((p) => (
+        <tr
+          key={p.sno}
+          className="border-b hover:bg-slate-50 transition text-[11px] sm:text-sm"
+        >
+          <td className="px-2 py-1 sm:px-4 sm:py-3">{p.sno}</td>
+          <td className="px-2 py-1 sm:px-4 sm:py-3 font-semibold">
+            {p.productName}
+          </td>
+          <td className="px-2 py-1 sm:px-4 sm:py-3 text-slate-600">
+            {p.description || "-"}
+          </td>
+          <td className="px-2 py-1 sm:px-4 sm:py-3">
+            <span
+              className={`px-1 py-0.5 sm:px-2 sm:py-1 rounded text-[10px] sm:text-xs font-bold ${
+                p.currentQuantity <= p.minQuantity
+                  ? "bg-red-100 text-red-600"
+                  : "bg-green-100 text-green-600"
+              }`}
+            >
+              {p.currentQuantity}
+            </span>
+          </td>
+          <td className="px-2 py-1 sm:px-4 sm:py-3 font-medium text-blue-700">
+            ₹{p.sp}
+          </td>
+          <td className="px-2 py-1 sm:px-4 sm:py-3">{p.location}</td>
+          <td className="px-2 py-1 sm:px-4 sm:py-3">
+            <div className="flex gap-0.5 sm:gap-1 flex-wrap">
+              {p.variant?.length
+                ? p.variant.map((v, i) => (
+                    <span
+                      key={i}
+                      className="bg-slate-200 px-1 py-px sm:px-1.5 sm:py-0.5 rounded text-[9px] sm:text-[11px]"
+                    >
+                      {v}
+                    </span>
+                  ))
+                : "-"}
             </div>
+          </td>
+          <td className="px-2 py-1 sm:px-4 sm:py-3">
+            <button
+              onClick={() => {
+                setSelectedBarcode(p.sno);
+                setSelectedProductName(p.productName);
+              }}
+              className="cursor-pointer hover:opacity-70 transition"
+            >
+              <BarCode value={p.sno} width={0.8} height={18} className="sm:w-auto" />
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
 
             {/* Modals for Barcode/Scanner */}
             {selectedBarcode && (

@@ -165,7 +165,7 @@ const ProductFormModal = ({ mode = "add", product = {}, onClose, addProductDb, u
             <select
               value={form.location}
               onChange={(e) => handleChange("location", e.target.value)}
-              className="w-full border border-slate-400 rounded-md px-3 py-2 bg-white outline-none focus:border-blue-500"
+              className="cursor-pointer w-full border border-slate-400 rounded-md px-3 py-2 bg-white outline-none focus:border-blue-500"
             >
               {locations.map((loc) => (
                 <option key={loc} value={loc}>
