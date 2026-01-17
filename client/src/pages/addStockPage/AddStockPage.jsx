@@ -75,11 +75,11 @@ console.log(err.message)
     };
 
     return (
-        <div className="p-6 pt-3 space-y-5">
+        <div className="md:p-6 md:pt-3 space-y-5">
             {/* Header */}
             <div className="flex flex-wrap justify-between items-center gap-3">
-                <h2 className="text-3xl font-bold text-slate-900">Add Stock</h2>
-                <button onClick={() => setViewStockModal(true)} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 cursor-pointer text-white font-semibold px-4 py-2 rounded-lg transition" >
+                <h2 className="text-xl md:text-3xl font-bold text-slate-900">Add Stock</h2>
+                <button onClick={() => setViewStockModal(true)} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 cursor-pointer text-white font-semibold max-sm:text-sm px-3 py-2 md:px-4 md:py-2 rounded-lg transition" >
                     View Stocks
                 </button>
             </div>
@@ -121,7 +121,7 @@ console.log(err.message)
 
                     <button 
                         onClick={() => setSelectedProduct(p)}
-                        className="bg-green-600 text-white px-3 py-1 rounded-md text-sm font-semibold hover:bg-green-700"
+                        className="bg-green-500 transition cursor-pointer text-white px-3 py-1 rounded-md text-sm font-semibold hover:bg-green-700"
                     >
                         Add Qty
                     </button>

@@ -77,7 +77,7 @@ const CreateUser = ({ onClose, onUserCreated }) => {
     <>
       {/* ========= MAIN MODAL (HIDDEN when confirm popup is open) ========= */}
       {!showConfirm && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-40">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-90">
           <div className="bg-white rounded-xl shadow-lg p-6 w-80 animate-scaleIn">
             <h2 className="text-xl font-semibold text-slate-700 mb-4">
               Create User
@@ -94,11 +94,11 @@ const CreateUser = ({ onClose, onUserCreated }) => {
 
             <select
               name="role"
-              className="w-full mb-3 border rounded-md px-3 py-2 focus:ring focus:ring-blue-400"
+              className="w-full mb-3 cursor-pointer border rounded-md px-3 py-2 focus:ring focus:ring-blue-400"
               value={formData.role}
               onChange={handleChange}
             >
-              <option value="">Select Role</option>
+              <option value="" disabled>Select Role</option>
               <option value="ADMIN">ADMIN</option>
               <option value="MODERATOR">MODERATOR</option>
               <option value="USER">USER</option>
@@ -116,7 +116,7 @@ const CreateUser = ({ onClose, onUserCreated }) => {
             <div className="flex justify-end gap-2">
               <button
                 onClick={onClose}
-                className="px-3 py-1 rounded-md text-gray-600 hover:bg-gray-200 transition"
+                className="px-3 py-1 rounded-md text-gray-600 bg-gray-200 hover:bg-gray-300 cursor-pointer transition"
               >
                 Cancel
               </button>
@@ -124,7 +124,7 @@ const CreateUser = ({ onClose, onUserCreated }) => {
               <button
                 type="button"
                 onClick={handleSaveClick}
-                className="px-4 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white shadow"
+                className="px-4 py-1 rounded-md bg-blue-600 hover:bg-blue-800 transition cursor-pointer text-white shadow"
               >
                 Save
               </button>
@@ -135,7 +135,7 @@ const CreateUser = ({ onClose, onUserCreated }) => {
 
       {/* ========= CONFIRM SAVE POPUP ========= */}
       {showConfirm && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-100">
           <div className="bg-white rounded-2xl p-6 w-360px text-center shadow-xl animate-scaleIn">
             <h3 className="text-lg font-semibold mb-2">Confirm Save</h3>
             <p className="text-gray-600 mb-5">
@@ -145,14 +145,14 @@ const CreateUser = ({ onClose, onUserCreated }) => {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowConfirm(false)}
-                className="flex-1 border rounded-lg py-2"
+                className="flex-1 border rounded-lg py-2 hover:bg-gray-100 cursor-pointer transition"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreateUser}
                 disabled={loading}
-                className="flex-1 bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700"
+                className="flex-1 bg-blue-600 text-white rounded-lg py-2 cursor-pointer transition hover:bg-blue-800"
               >
                 {loading ? "Saving..." : "Save"}
               </button>
@@ -163,7 +163,7 @@ const CreateUser = ({ onClose, onUserCreated }) => {
 
       {/* ========= SUCCESS / ERROR TOAST (TOP) ========= */}
       {popup.show && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-60 animate-slideDown">
+        <div className="fixed top-6 max-md:w-[80%] left-1/2 -translate-x-1/2 z-110 animate-slideDown">
           <div
             className={`flex items-center gap-3 px-6 py-4 rounded-xl shadow-lg bg-white border-l-6 ${
               popup.type === "success"
