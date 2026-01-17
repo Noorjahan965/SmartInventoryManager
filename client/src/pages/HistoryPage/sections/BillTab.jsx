@@ -2,18 +2,142 @@ import { useEffect, useState } from "react";
 
 import BillModal from "../../../component/historyPageComponent/BillModal";
 
+function PaidConfirmModal({ show, onConfirm, onCancel }) {
+  if (!show) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-999">
+      <div className="bg-white w-[90%] max-w-xs rounded-xl shadow-xl border border-green-300 p-5 animate-scaleIn">
+        
+        {/* Icon */}
+        <div className="flex justify-center mb-3">
+          <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+            <span className="text-green-600 text-2xl">💰</span>
+          </div>
+        </div>
+
+        {/* Title */}
+        <h2 className="text-center text-green-600 font-bold text-lg mb-1">
+          Mark as Paid?
+        </h2>
+
+        {/* Message */}
+        <p className="text-center text-slate-700 text-sm">
+          Did the customer complete payment?
+        </p>
+
+        {/* Buttons */}
+        <div className="flex gap-3 mt-5">
+          <button
+            onClick={onCancel}
+            className="w-1/2 bg-slate-400 cursor-pointer text-white text-sm py-2 rounded-lg font-semibold hover:bg-slate-500 active:scale-95 transition"
+          >
+            No
+          </button>
+
+          <button
+            onClick={onConfirm}
+            className="w-1/2 bg-green-600 cursor-pointer text-white text-sm py-2 rounded-lg font-semibold hover:bg-green-700 active:scale-95 transition"
+          >
+            Yes
+          </button>
+        </div>
+      </div>
+
+      <style>{`
+        .animate-scaleIn {
+          animation: scaleIn .2s ease-out;
+        }
+        @keyframes scaleIn {
+          from { transform: scale(.9); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+
+const LogEntiry = ({ log, setBillModal }) => {
+	const profit = Number(log.totalSp) - Number(log.totalCp);
+
+	const [paidStatus, setPaidStatus] = useState(log.isPaid);
+	const [payConfirmModal, setPayConfirmModal] = useState(false);
+
+	const updatePaidStatus = async () => {
+
+		if(paidStatus) return;
+
+		const token = localStorage.getItem('Token');
+		try {
+			const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/stock/paid-status`, {
+				method: 'PUT',
+				headers: {
+						Authorization: `Bearer ${token}`,
+						'content-type': 'Application/json'
+					},
+				body: JSON.stringify({ logId: log._id })
+			})
+			const data = await res.json();
+			if(res.status === 200) {
+				setPayConfirmModal(false);
+				setPaidStatus(true);
+			}
+		}
+		catch(err) {
+
+		}
+	}
+
+	return (
+		<tr key={log._id} className="grid grid-cols-10">
+			<td className="py-2 px-2">{log.customerName || "-"}</td>
+			<td className="py-2 px-2">{log.mobileNo || "-"}</td>
+			<td className="py-2 px-2">{log.author}</td>
+			<td className="py-2 px-2 text-right">₹{log.totalCp}</td>
+			<td className="py-2 px-2 text-right">₹{log.totalSp}</td>
+			<td
+				className={`py-2 px-2 text-right font-semibold ${profit >= 0 ? "text-green-600" : "text-red-600"
+					}`}
+			>
+				₹{profit}
+			</td>
+			<td className="py-2 px-2 text-center">{log.modeOfPayment}</td>
+			<td className="flex justify-center items-center">
+				<button onClick={() => setPayConfirmModal(true)} className={`${paidStatus ? 'bg-green-200 text-green-500' : 'bg-red-200 text-red-600'} px-3 py-1 cursor-pointer rounded-lg`}>{paidStatus ? "YES" : "NO"}</button>
+			</td>
+			<td className="py-2 px-2 text-right">
+				{log.dateAndTime.split(" ")[1]}
+			</td>
+			<td className="py-2 px-2 text-center">
+				<button
+					className="text-blue-600 hover:text-blue-800 font-semibold cursor-pointer transition"
+					onClick={() => setBillModal(log)}
+				>
+					View
+				</button>
+				<PaidConfirmModal show={payConfirmModal} onConfirm={() => updatePaidStatus()} onCancel={() => setPayConfirmModal(false)} />
+			</td>
+
+			
+
+		</tr>
+	);
+}
+
 const BillTab = () => {
+
 	const [currentDate, setCurrentDate] = useState("");
 	const [logs, setLogs] = useState([]);
 	const [loading, setLoading] = useState(false);
 
 	const [billModal, setBillModal] = useState(null);
 
+	
 	const fetchBills = async () => {
+		const token = localStorage.getItem("Token");
 		try {
 			setLoading(true);
-			const token = localStorage.getItem("Token");
-
 			const res = await fetch(
 				`${import.meta.env.VITE_BACKEND_URL}/api/stock/logs?isBill=true&date=${currentDate}`,
 				{
@@ -80,40 +204,7 @@ const BillTab = () => {
 
 						<tbody className="block max-h-[50vh] overflow-y-auto divide-y divide-gray-200">
 							{logs.map((log) => {
-								const profit = Number(log.totalSp) - Number(log.totalCp);
-								return (
-									<tr key={log._id} className="grid grid-cols-10">
-										<td className="py-2 px-2">{log.customerName || "-"}</td>
-										<td className="py-2 px-2">{log.mobileNo || "-"}</td>
-										<td className="py-2 px-2">{log.author}</td>
-										<td className="py-2 px-2 text-right">₹{log.totalCp}</td>
-										<td className="py-2 px-2 text-right">₹{log.totalSp}</td>
-										<td
-											className={`py-2 px-2 text-right font-semibold ${profit >= 0 ? "text-green-600" : "text-red-600"
-												}`}
-										>
-											₹{profit}
-										</td>
-										<td className="py-2 px-2 text-center">{log.modeOfPayment}</td>
-										<td
-											className={`py-2 px-2 text-center font-semibold ${log.isPaid ? "text-green-600" : "text-red-600"
-												}`}
-										>
-											{log.isPaid ? "YES" : "NO"}
-										</td>
-										<td className="py-2 px-2 text-right">
-											{log.dateAndTime.split(" ")[1]}
-										</td>
-										<td className="py-2 px-2 text-center">
-											<button
-												className="text-blue-600 hover:text-blue-800 font-semibold"
-												onClick={() => setBillModal(log)}
-											>
-												View
-											</button>
-										</td>
-									</tr>
-								);
+								return <LogEntiry key={log._id} log={log} setBillModal={setBillModal} />
 							})}
 						</tbody>
 					</table>

@@ -187,3 +187,22 @@ export const getDashboardStatsService = async () => {
     return { status: 500, message: err.message };
   }
 };
+
+
+export const updatePaidStatusService = async ({ logId }) => {
+  try {
+    const updatedLog = await Log.findByIdAndUpdate(
+      logId,                     // no need to wrap in ObjectId; Mongoose accepts string
+      { isPaid: true },
+      { new: true }              // return updated doc instead of old one
+    );
+
+    if (updatedLog) {
+      return { status: 200, message: 'Paid status updated successfully' };
+    }
+
+    return { status: 404, message: 'Bill not found' };
+  } catch (err) {
+    return { status: 500, message: err.message };
+  }
+};
