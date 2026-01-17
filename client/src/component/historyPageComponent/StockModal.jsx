@@ -90,7 +90,7 @@ const StockModal = ({ stock, onCancel }) => {
 				<div className="flex justify-end pt-2">
 					<button
 						onClick={onCancel}
-						className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 font-semibold"
+						className="px-4 py-2 rounded-md bg-red-500 text-white transition cursor-pointer hover:bg-red-700 font-semibold"
 					>
 						Close
 					</button>

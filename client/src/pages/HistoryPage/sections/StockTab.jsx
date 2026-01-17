@@ -74,7 +74,7 @@ const StockTab = () => {
 									</h4>
 
 									<button
-										className="text-blue-600 font-semibold hover:text-blue-800"
+										className="text-blue-600 font-semibold hover:text-blue-800 transition cursor-pointer"
 										onClick={() => setStockModal(log)}
 									>
 										View

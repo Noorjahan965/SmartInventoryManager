@@ -41,7 +41,7 @@ const HistoryPage = () => {
 						onClick={() => setTab(item.id)}
 						className={`
               px-4 py-2 rounded-t-md font-semibold 
-              transition duration-200 border-b-2 
+              transition duration-200 border-b-2 cursor-pointer 
               ${tab === item.id
 								? "text-blue-600 border-blue-600 bg-blue-100/40"
 								: "text-gray-500 border-transparent hover:text-blue-600 hover:bg-gray-100"

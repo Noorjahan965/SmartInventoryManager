@@ -38,9 +38,9 @@ const BillModal = ({ bill, onCancel }) => {
         {/* STORE HEADER */}
         <div className="text-center border-b pb-3">
           <h1 className="text-2xl font-bold text-slate-900">Lulu Mobiles & Services</h1>
-          <p className="text-sm text-slate-600">123 Cheranmahadevi Road, Bazzar</p>
-          <p className="text-sm text-slate-600">Pettai, Tirunelveli</p>
-          <p className="text-sm text-slate-600">Phone: +91 8925369388</p>
+					<p className="text-sm text-slate-600">92 Cheranmahadevi Road</p>
+					<p className="text-sm text-slate-600">Pettai, Tirunelveli - 627004</p>
+					<p className="text-sm text-slate-600">Phone: +91 9629105384, +91 9790525384</p>
           <p className="text-sm text-left text-slate-500 mt-2"><span className="font-bold text-black">Invoice ID:</span> #{bill._id.toUpperCase()}</p>
         </div>
 
@@ -113,7 +113,7 @@ const BillModal = ({ bill, onCancel }) => {
         <div className="flex justify-end pt-2">
           <button
             onClick={onCancel}
-            className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 font-semibold"
+            className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-700 transition font-semibold cursor-pointer"
           >
             Close
           </button>
