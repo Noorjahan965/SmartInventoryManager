@@ -10,19 +10,22 @@ const generateUniqueSno = async () => {
 };
 
 export const getProductService = async (sno) => {
-    try {
-        const product = await Product.findOne({ sno });
+  try {
+    const product = await Product.findOne({ sno });
 
-        if (!product) {
-            return { status: 404, message: "Product not found" };
-        }
+    if (!product) {
+      return { status: 404, message: "Product not found" };
+    }
 
-        return { status: 200, message: "Product fetched successfully", data: product };
-    }
-    catch(err) {
-        return { status: 500, message: err.message };
-    }
-}
+    return {
+      status: 200,
+      message: "Product fetched successfully",
+      data: product,
+    };
+  } catch (err) {
+    return { status: 500, message: err.message };
+  }
+};
 
 export const getAllProductsService = async ({
   search = "",
@@ -31,19 +34,26 @@ export const getAllProductsService = async ({
   cp = "none",
   sp = "none",
   page = 1,
-  limit = 250
+  limit = 250,
 }) => {
   try {
     const filter = {};
 
     // Combined search: sno OR productName
     if (search) {
-  filter.$or = [
-    { productName: { $regex: search, $options: "i" } },
-    { $expr: { $regexMatch: { input: { $toString: "$sno" }, regex: search, options: "i" } } }
-  ];
-}
-
+      filter.$or = [
+        { productName: { $regex: search, $options: "i" } },
+        {
+          $expr: {
+            $regexMatch: {
+              input: { $toString: "$sno" },
+              regex: search,
+              options: "i",
+            },
+          },
+        },
+      ];
+    }
 
     if (location) {
       filter.location = location;
@@ -76,44 +86,42 @@ export const getAllProductsService = async ({
   }
 };
 
-
 export const addProductService = async (productData) => {
-    try {
-        const sno = await generateUniqueSno();
+  try {
+    const sno = await generateUniqueSno();
 
-        const newProduct = new Product({
-            sno,
-            productName: productData.productName,
-            description: productData.description || "",
-            currentQuantity: productData.currentQuantity,
-            cp: productData.cp,
-            sp: productData.sp,
-            minQuantity: productData.minQuantity,
-            location: productData.location,
-            variant: productData.variant || [],
-        });
+    const newProduct = new Product({
+      sno,
+      productName: productData.productName,
+      description: productData.description || "",
+      currentQuantity: productData.currentQuantity,
+      cp: productData.cp,
+      sp: productData.sp,
+      minQuantity: productData.minQuantity,
+      location: productData.location,
+      variant: productData.variant || [],
+    });
 
-        const saved = await newProduct.save();
+    const saved = await newProduct.save();
 
-        return { 
-            status: 201, 
-            message: "Product added successfully", 
-            data: saved 
-        };
-
-    } catch (err) {
-        return { status: 500, message: err.message };
-    }
+    return {
+      status: 201,
+      message: "Product added successfully",
+      data: saved,
+    };
+  } catch (err) {
+    return { status: 500, message: err.message };
+  }
 };
 
 export const updateProductService = async (_id, productData) => {
-    delete productData._id;
+  delete productData._id;
   try {
     const updated = await Product.findByIdAndUpdate(
       _id,
       {
         ...productData,
-        lastModified: Date.now()
+        lastModified: Date.now(),
       },
       { new: true } // return updated product
     );
@@ -125,9 +133,8 @@ export const updateProductService = async (_id, productData) => {
     return {
       status: 200,
       message: "Product updated successfully",
-      data: updated
+      data: updated,
     };
-
   } catch (err) {
     return { status: 500, message: err.message };
   }
@@ -144,14 +151,12 @@ export const deleteProductService = async (_id) => {
     return {
       status: 200,
       message: "Product deleted successfully",
-      data: deleted
+      data: deleted,
     };
-
   } catch (err) {
     return { status: 500, message: err.message };
   }
 };
-
 
 export const getProductByIdService = async (_id) => {
   try {
@@ -164,9 +169,24 @@ export const getProductByIdService = async (_id) => {
     return {
       status: 200,
       message: "Product fetched successfully",
-      data: product
+      data: product,
     };
+  } catch (err) {
+    return { status: 500, message: err.message };
+  }
+};
 
+export const getLowStockProductsService = async () => {
+  try {
+    const products = await Product.find({
+      $expr: { $lte: ["$currentQuantity", "$minQuantity"] },
+    }).sort({ currentQuantity: 1 });
+
+    return {
+      status: 200,
+      message: "Low stock products fetched",
+      data: products,
+    };
   } catch (err) {
     return { status: 500, message: err.message };
   }
