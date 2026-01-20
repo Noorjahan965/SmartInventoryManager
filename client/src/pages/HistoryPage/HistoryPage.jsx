@@ -20,7 +20,7 @@ const HistoryPage = () => {
 	}, [searchParams]);
 
 	return (
-		<div className="p-6 pt-4 space-y-8">
+		<div className="md:p-6 md:pt-4 space-y-8">
 
 			{/* Header */}
 			<div className="flex flex-wrap justify-between items-center gap-3">

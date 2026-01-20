@@ -39,7 +39,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-400 via-indigo-500 to-purple-600 px-4">
+    <div className="min-h-dvh flex items-center justify-center bg-linear-to-br from-blue-400 via-indigo-500 to-purple-600 px-4">
       <div className="w-full max-w-md backdrop-blur-xl bg-white/20 rounded-2xl shadow-2xl p-8 border border-white/30 animate-fadeIn">
         
         <div className="flex flex-col items-center mb-6">
@@ -51,7 +51,7 @@ const LoginPage = () => {
             />
           </div>
           <h2 className="text-3xl font-bold text-white drop-shadow-md">
-            Sign In
+            Log In
           </h2>
           <p className="text-blue-100 text-sm">
             Access your Inventory Dashboard

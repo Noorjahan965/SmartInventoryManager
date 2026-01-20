@@ -189,11 +189,15 @@ export const getDashboardStatsService = async () => {
 };
 
 
-export const updatePaidStatusService = async ({ logId }) => {
+export const updatePaidStatusService = async ({ logId, paidAmount }) => {
+  console.log(paidAmount)
   try {
     const updatedLog = await Log.findByIdAndUpdate(
       logId,                     // no need to wrap in ObjectId; Mongoose accepts string
-      { isPaid: true },
+      {
+        isPaid: true,
+        paidAmount: paidAmount
+      },
       { new: true }              // return updated doc instead of old one
     );
 

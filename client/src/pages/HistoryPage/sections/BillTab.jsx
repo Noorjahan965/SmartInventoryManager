@@ -2,8 +2,16 @@ import { useEffect, useState } from "react";
 
 import BillModal from "../../../component/historyPageComponent/BillModal";
 
-function PaidConfirmModal({ show, onConfirm, onCancel }) {
+function PaidConfirmModal({ sp, show, onConfirm, onCancel }) {
   if (!show) return null;
+
+  const [discount, setDiscount] = useState("");
+  const [discountPercent, setDiscountPercent] = useState(0);
+
+  const handleConfirm = (finalAmount) => {
+    onConfirm(finalAmount); // send discount back to parent
+    setDiscount("");     // reset when closed
+  };
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-999">
@@ -22,12 +30,32 @@ function PaidConfirmModal({ show, onConfirm, onCancel }) {
         </h2>
 
         {/* Message */}
-        <p className="text-center text-slate-700 text-sm">
+        <p className="text-center text-slate-700 text-sm mb-3">
           Did the customer complete payment?
         </p>
 
+		<p className="text-left"><span className="font-bold">Cost</span>: ₹{sp}</p>
+		<p className="text-left"><span className="font-bold">Discount</span>: {discountPercent}%</p>
+		<p className="text-left"><span className="font-bold">Final price</span>: ₹{sp-discount}</p>
+
+        {/* Discount Input */}
+        <div className="mb-4">
+          <label className="text-sm font-semibold text-slate-700">Discount (optional)</label>
+          <input
+            type="number"
+            value={discount}
+            onChange={(e) => {
+				setDiscount(e.target.value)
+				setDiscountPercent(Math.round((100-(sp-e.target.value)/sp*100)*100)/100)
+			}}
+            className="mt-1 w-full border border-slate-300 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-green-400"
+            placeholder="₹0"
+            min="0"
+          />
+        </div>
+
         {/* Buttons */}
-        <div className="flex gap-3 mt-5">
+        <div className="flex gap-3 mt-3">
           <button
             onClick={onCancel}
             className="w-1/2 bg-slate-400 cursor-pointer text-white text-sm py-2 rounded-lg font-semibold hover:bg-slate-500 active:scale-95 transition"
@@ -36,7 +64,11 @@ function PaidConfirmModal({ show, onConfirm, onCancel }) {
           </button>
 
           <button
-            onClick={onConfirm}
+            onClick={() => {
+				const finalAmount = sp - Number(discount);
+				console.log("Final: "+finalAmount);
+				handleConfirm(finalAmount);
+			}}
             className="w-1/2 bg-green-600 cursor-pointer text-white text-sm py-2 rounded-lg font-semibold hover:bg-green-700 active:scale-95 transition"
           >
             Yes
@@ -58,13 +90,14 @@ function PaidConfirmModal({ show, onConfirm, onCancel }) {
 }
 
 
+
 const LogEntiry = ({ log, setBillModal }) => {
-	const profit = Number(log.totalSp) - Number(log.totalCp);
+	const profit = Number(log.paidAmount) - Number(log.totalCp);
 
 	const [paidStatus, setPaidStatus] = useState(log.isPaid);
 	const [payConfirmModal, setPayConfirmModal] = useState(false);
 
-	const updatePaidStatus = async () => {
+	const updatePaidStatus = async (finalAmount) => {
 
 		if(paidStatus) return;
 
@@ -76,7 +109,10 @@ const LogEntiry = ({ log, setBillModal }) => {
 						Authorization: `Bearer ${token}`,
 						'content-type': 'Application/json'
 					},
-				body: JSON.stringify({ logId: log._id })
+				body: JSON.stringify({ 
+					logId: log._id,
+					paidAmount: finalAmount
+				})
 			})
 			const data = await res.json();
 			if(res.status === 200) {
@@ -90,7 +126,7 @@ const LogEntiry = ({ log, setBillModal }) => {
 	}
 
 	return (
-		<tr key={log._id} className="grid grid-cols-10">
+		<tr key={log._id} className="grid grid-cols-11">
 			<td className="py-2 px-2">{log.customerName || "-"}</td>
 			<td className="py-2 px-2">{log.mobileNo || "-"}</td>
 			<td className="py-2 px-2">{log.author}</td>
@@ -106,6 +142,7 @@ const LogEntiry = ({ log, setBillModal }) => {
 			<td className="flex justify-center items-center">
 				<button onClick={() => setPayConfirmModal(true)} className={`${paidStatus ? 'bg-green-200 text-green-500' : 'bg-red-200 text-red-600'} px-3 py-1 cursor-pointer rounded-lg`}>{paidStatus ? "YES" : "NO"}</button>
 			</td>
+			<td className="p-2 text-center">{log.isPaid ? log.paidAmount : '-'}</td>
 			<td className="py-2 px-2 text-right">
 				{log.dateAndTime.split(" ")[1]}
 			</td>
@@ -116,11 +153,8 @@ const LogEntiry = ({ log, setBillModal }) => {
 				>
 					View
 				</button>
-				<PaidConfirmModal show={payConfirmModal} onConfirm={() => updatePaidStatus()} onCancel={() => setPayConfirmModal(false)} />
+				<PaidConfirmModal sp={log.totalSp} show={payConfirmModal} onConfirm={(finalAmount) => updatePaidStatus(finalAmount)} onCancel={() => setPayConfirmModal(false)} />
 			</td>
-
-			
-
 		</tr>
 	);
 }
@@ -188,7 +222,7 @@ const BillTab = () => {
 					<div className="overflow-x-auto">
 					<table className="w-full text-sm min-w-250">
 						<thead className="bg-gray-200 sticky top-0">
-							<tr className="grid grid-cols-10 border-b font-semibold">
+							<tr className="grid grid-cols-11 border-b font-semibold">
 								<td className="py-2 px-2">Name</td>
 								<td className="py-2 px-2">Mobile</td>
 								<td className="py-2 px-2">Author</td>
@@ -197,6 +231,7 @@ const BillTab = () => {
 								<td className="py-2 px-2 text-right">Profit (₹)</td>
 								<td className="py-2 px-2 text-center">Mode</td>
 								<td className="py-2 px-2 text-center">Paid</td>
+								<td className="py-2 px-2 text-center">Paid Amount</td>
 								<td className="py-2 px-2 text-right">Time</td>
 								<td className="py-2 px-2 text-center">View</td>
 							</tr>

@@ -29,7 +29,7 @@ const BillModal = ({ bill, onCancel }) => {
 
   const totalCp = bill.totalCp;
   const totalSp = bill.totalSp;
-  const profit = totalSp - totalCp;
+  const profit = bill.paidAmount - totalCp;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-10 px-4 z-50">
@@ -96,21 +96,42 @@ const BillModal = ({ bill, onCancel }) => {
         </div>
 
         {/* TOTALS */}
-        <div className="flex justify-between space-y-1 border-t pt-3">
-          <p><span className="font-semibold">Total CP:</span> ₹{totalCp}</p>
-          <p><span className="font-semibold">Total SP:</span> ₹{totalSp}</p>
-          <p className="font-semibold">
-            Profit:{" "}
-            <span
-              className={profit >= 0 ? "text-green-600" : "text-red-600"}
-            >
-              ₹{profit}
-            </span>
-          </p>
-        </div>
+        <div className="border-t pt-2 space-y-1 text-sm">
+  <div className="flex justify-between">
+    <span className="font-medium text-slate-600">Cost Price</span>
+    <span className="font-semibold text-slate-800">₹{totalCp}</span>
+  </div>
+
+  <div className="flex justify-between">
+    <span className="font-medium text-slate-600">Selling Total</span>
+    <span className="font-semibold text-slate-800">₹{totalSp}</span>
+  </div>
+
+  <div className="flex justify-between">
+    <span className="font-medium text-slate-600">Profit</span>
+    <span
+      className={`font-bold ${profit >= 0 ? "text-green-600" : "text-red-600"}`}
+    >
+      ₹{profit}
+    </span>
+  </div>
+</div>
+
+{/* DISCOUNT & FINAL PRICE BLOCK */}
+<div className="mt-1 bg-slate-50 rounded-lg p-2 space-y-0 shadow-inner">
+  <div className="flex justify-between">
+    <span className="font-semibold text-slate-600">Discount</span>
+    <span className="font-bold text-red-500">-₹{totalSp - bill.paidAmount}</span>
+  </div>
+
+  <div className="flex justify-between text-lg pt-1 border-t font-extrabold">
+    <span className="text-slate-700">Final Amount</span>
+    <span className="text-green-600">₹{bill.paidAmount}</span>
+  </div>
+</div>
 
         {/* FOOTER BUTTONS */}
-        <div className="flex justify-end pt-2">
+        <div className="flex justify-end pt-1">
           <button
             onClick={onCancel}
             className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-700 transition font-semibold cursor-pointer"
@@ -120,7 +141,7 @@ const BillModal = ({ bill, onCancel }) => {
         </div>
 
         {/* THANK YOU FOOTER */}
-        <p className="text-center text-sm text-slate-500 mt-2">
+        <p className="text-center text-sm text-slate-500 mt-1">
           Thank you for your purchase!
         </p>
       </div>
