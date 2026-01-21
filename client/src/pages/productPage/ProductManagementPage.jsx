@@ -8,8 +8,6 @@ import BarCode from "../../component/barcode/BarCode";
 import BarCodePopup from "../../component/barcode/BarCodePopup";
 import BarCodeScanner from "../../component/barcode/BarCodeScanner";
 
-import { locations } from "../../constants/metaData";
-
 const ProductManagementPage = () => {
 	const token = localStorage.getItem('Token');
 	const [products, setProducts] = useState([]);
@@ -27,7 +25,6 @@ const ProductManagementPage = () => {
 		qty: "none",
 		cp: "none",
 		sp: "none",
-		location: "",
 	});
 
 	const [deleteProductModal, setDeleteProductModal] = useState(false);
@@ -43,7 +40,6 @@ const ProductManagementPage = () => {
 
 			const query = new URLSearchParams({
 				search: searchTerm.trim(),
-				location: filters.location,
 				qty: filters.qty,
 				cp: filters.cp,
 				sp: filters.sp,
@@ -72,6 +68,7 @@ const ProductManagementPage = () => {
 		}
 	};
 	const addProductDb = async (product) => {
+		product.location = product.location.toUpperCase();
 		try {
 			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product`, {
 				method: 'POST',
@@ -93,6 +90,7 @@ const ProductManagementPage = () => {
 	}
 
 	const updateProductDb = async (product) => {
+		product.location = product.location.toUpperCase();
 		try {
 			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product`, {
 				method: 'PUT',
@@ -194,24 +192,11 @@ const ProductManagementPage = () => {
 					<option value="desc">High → Low</option>
 				</select>
 
-				<select
-					className="border px-3 py-2 rounded-lg bg-white border-slate-400 text-slate-900 cursor-pointer"
-					value={filters.location}
-					onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-				>
-					{locations.map((loc) => (
-						<option key={loc} value={loc}>
-							{loc === "" ? "All Locations" : loc}
-						</option>
-					))}
-				</select>
-
 				<button onClick={() => {
 					setFilters({
 						qty: "none",
 						cp: "none",
 						sp: "none",
-						location: "",
 					});
 					setSearchTerm('');
 				}} className="bg-blue-600 hover:bg-blue-800 cursor-pointer text-white font-semibold px-4 py-2 rounded-md transition-all">Reset</button>
