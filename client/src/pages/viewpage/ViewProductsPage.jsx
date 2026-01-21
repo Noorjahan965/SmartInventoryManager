@@ -6,8 +6,6 @@ import BarCode from "../../component/barcode/BarCode";
 import BarCodePopup from "../../component/barcode/BarCodePopup";
 import BarCodeScanner from "../../component/barcode/BarCodeScanner";
 
-import { locations } from "../../constants/metaData";
-
 const ViewProductsPage = () => {
     const [products, setProducts] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
@@ -21,7 +19,6 @@ const ViewProductsPage = () => {
         qty: "none",
         cp: "none",
         sp: "none",
-        location: "",
     });
 
     const [showScanner, setShowScanner] = useState(false);
@@ -33,7 +30,6 @@ const ViewProductsPage = () => {
 
             const query = new URLSearchParams({
                 search: searchTerm.trim(),
-                location: filters.location,
                 qty: filters.qty,
                 cp: filters.cp,
                 sp: filters.sp,
@@ -118,20 +114,8 @@ const ViewProductsPage = () => {
                     <option value="desc">High → Low</option>
                 </select>
 
-                <select
-                    className="border px-3 py-2 rounded-lg bg-white border-slate-400 text-slate-900 cursor-pointer text-sm"
-                    value={filters.location}
-                    onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-                >
-                    {locations.map((loc) => (
-                        <option key={loc} value={loc}>
-                            {loc === "" ? "All Locations" : loc}
-                        </option>
-                    ))}
-                </select>
-
                 <button onClick={() => {
-                    setFilters({ qty: "none", cp: "none", sp: "none", location: "" });
+                    setFilters({ qty: "none", cp: "none", sp: "none" });
                     setSearchTerm('');
                 }} className="bg-blue-600 hover:bg-blue-800 cursor-pointer text-white text-sm font-semibold px-4 py-2 rounded-md transition-all">
                     Reset

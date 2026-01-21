@@ -1,6 +1,5 @@
 import { IoClose } from "react-icons/io5";
 import { useState, useEffect } from "react";
-import { locations } from "../../constants/metaData";
 
 const ProductFormModal = ({ mode = "add", product = {}, onClose, addProductDb, updateProductDb }) => {
 
@@ -159,22 +158,23 @@ const ProductFormModal = ({ mode = "add", product = {}, onClose, addProductDb, u
 
           {/* LOCATION */}
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1">
-              Location *
-            </label>
-            <select
-              value={form.location}
-              onChange={(e) => handleChange("location", e.target.value)}
-              className="cursor-pointer w-full border border-slate-400 rounded-md px-3 py-2 bg-white outline-none focus:border-blue-500"
-            >
-              {locations.map((loc) => (
-                <option key={loc} value={loc}>
-                  {loc === "" ? "Select Location" : loc}
-                </option>
-              ))}
-            </select>
-            {errors.location && <p className="text-red-500 text-xs">{errors.location}</p>}
-          </div>
+  <label className="block text-sm font-semibold text-slate-700 mb-1">
+    Location *
+  </label>
+
+  <input
+    type="text"
+    value={form.location}
+    onChange={(e) => handleChange("location", e.target.value)}
+    placeholder="Enter location"
+    className="w-full border border-slate-400 rounded-md px-3 py-2 bg-white outline-none focus:border-blue-500"
+  />
+
+  {errors.location && (
+    <p className="text-red-500 text-xs">{errors.location}</p>
+  )}
+</div>
+
 
           {/* VARIANT */}
           <div>
