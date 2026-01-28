@@ -43,6 +43,7 @@ export const getAllProductsService = async ({
     if (search) {
       filter.$or = [
         { productName: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
         {
           $expr: {
             $regexMatch: {
